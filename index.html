@@ -154,9 +154,99 @@ function showDemo() {
     </div>
 </div>
 
-<script>
-function showDemo() {
-    document.getElementById('demo-section').style.display = 'block';
-}
-</script></body>
+<div id="demo-section" style="display: none; margin-top: 3rem; background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 1rem;">
+    <div id="demo-step-1" style="display: block;">
+        <h2 style="text-align: center; margin-bottom: 2rem;">🎬 Live Demo: Mock Case</h2>
+        <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 1rem; margin-bottom: 2rem;">
+            <h3>Case: TechStart Inc. vs DevCorp Solutions</h3>
+            <p><strong>Dispute:</strong> $3,500 web development contract breach</p>
+            <p><strong>Claim:</strong> Website not delivered as specified</p>
+            <p><strong>Evidence:</strong> Contract, emails, partial work product</p>
+        </div>
+        <div style="text-align: center;">
+            <button onclick="startDemo()" style="background: #10b981; color: white; padding: 1rem 2rem; border: none; border-radius: 0.5rem; cursor: pointer; font-size: 1.1rem; font-weight: bold;">
+                ▶️ Start Case Filing
+            </button>
+        </div>
+    </div>
+
+    <div id="demo-step-2" style="display: none;">
+        <h2>📋 Case Filing System</h2>
+        <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 1rem; margin: 1rem 0;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem;">Case Title:</label>
+                    <input value="TechStart Inc. vs DevCorp Solutions" style="width: 100%; padding: 0.5rem; border-radius: 0.25rem; border: none;" readonly>
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem;">Amount:</label>
+                    <input value="$3,500" style="width: 100%; padding: 0.5rem; border-radius: 0.25rem; border: none;" readonly>
+                </div>
+            </div>
+            <div style="margin-top: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem;">Description:</label>
+                <textarea style="width: 100%; padding: 0.5rem; border-radius: 0.25rem; border: none; height: 60px;" readonly>DevCorp failed to deliver working website by agreed deadline. Multiple design issues and missing functionality.</textarea>
+            </div>
+        </div>
+        <div style="text-align: center;">
+            <button onclick="nextStep(3)" style="background: #3b82f6; color: white; padding: 1rem 2rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: bold;">
+                Continue to AI Analysis ⚡
+            </button>
+        </div>
+    </div>
+
+    <div id="demo-step-3" style="display: none;">
+        <h2>🧠 Live AI Analysis</h2>
+        <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 1rem; margin: 1rem 0;">
+            <h3 style="margin-bottom: 1rem;">Competitive AI Systems Analyzing...</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <div style="background: rgba(255,165,0,0.2); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgba(255,165,0,0.5);">
+                    <h4>Claude AI</h4>
+                    <p>Confidence: 87%</p>
+                    <p>Recommends: Plaintiff</p>
+                    <p style="font-size: 0.9rem;">Strong contract evidence</p>
+                </div>
+                <div style="background: rgba(34,197,94,0.2); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgba(34,197,94,0.5);">
+                    <h4>GPT-4</h4>
+                    <p>Confidence: 82%</p>
+                    <p>Recommends: Plaintiff</p>
+                    <p style="font-size: 0.9rem;">Clear breach of terms</p>
+                </div>
+                <div style="background: rgba(59,130,246,0.2); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgba(59,130,246,0.5);">
+                    <h4>DeepSeek</h4>
+                    <p>Confidence: 91%</p>
+                    <p>Recommends: Partial</p>
+                    <p style="font-size: 0.9rem;">Some work completed</p>
+                </div>
+                <div style="background: rgba(147,51,234,0.2); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgba(147,51,234,0.5);">
+                    <h4>Gemini</h4>
+                    <p>Confidence: 85%</p>
+                    <p>Recommends: Plaintiff</p>
+                    <p style="font-size: 0.9rem;">Damages justified</p>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: center;">
+            <button onclick="nextStep(4)" style="background: #8b5cf6; color: white; padding: 1rem 2rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: bold;">
+                Generate Verdict ⚖️
+            </button>
+        </div>
+    </div>
+
+    <div id="demo-step-4" style="display: none;">
+        <h2>⚖️ SwiftVerdict Decision</h2>
+        <div style="background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(59,130,246,0.2)); padding: 2rem; border-radius: 1rem; margin: 1rem 0; border: 2px solid rgba(34,197,94,0.5);">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h3 style="font-size: 2rem; color: #10b981; margin-bottom: 1rem;">RULING</h3>
+                <h4 style="font-size: 1.5rem; margin-bottom: 0.5rem;">In Favor of Plaintiff</h4>
+                <p style="font-size: 1.2rem;">Award: $2,950 + $75 fee reimbursement</p>
+            </div>
+            <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 0.5rem; margin: 1rem 0;">
+                <h4>Legal Analysis:</h4>
+                <p>Valid contract established with clear deliverables. Defendant failed to meet agreed specifications and deadline. Partial credit given for work completed.</p>
+            </div>
+            <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 0.5rem;">
+                <h4>🔐 Blockchain Verification:</h4>
+                <p style="font-family: monospace; font-size: 0.9rem;">Hash: 0x4a7b9f2e8c1d...</p>
+                <p>✅ Decision permanently recorded and legally en</body>
 </html>
