@@ -66,9 +66,77 @@
                 </div>
             </div>
             
-            <button class="cta-button" onclick="alert('SwiftVerdict Platform Coming Soon! Email: contact@swiftverdict.xyz')">
-                File Your Case Now
+            <button class="cta-button" onclick="showDemo()">
+    File Your Case Now
+</button>
+
+<div id="demo-section" style="display: none; margin-top: 3rem; background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 1rem; text-align: left;">
+    <h2 style="text-align: center; margin-bottom: 2rem;">🚀 Platform Preview</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+        <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 0.5rem;">
+            <h3>📋 Case Filing System</h3>
+            <ul style="margin-top: 1rem; line-height: 1.6;">
+                <li>• Smart case categorization</li>
+                <li>• Evidence upload with blockchain verification</li>
+                <li>• Automatic jurisdiction detection</li>
+                <li>• Real-time fee calculation</li>
+            </ul>
+        </div>
+        
+        <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 0.5rem;">
+            <h3>🎥 Virtual Hearing Room</h3>
+            <ul style="margin-top: 1rem; line-height: 1.6;">
+                <li>• HD video conferencing</li>
+                <li>• Live AI analysis display</li>
+                <li>• Real-time transcription</li>
+                <li>• Evidence presentation tools</li>
+            </ul>
+        </div>
+        
+        <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 0.5rem;">
+            <h3>🧠 Competitive AI Engine</h3>
+            <ul style="margin-top: 1rem; line-height: 1.6;">
+                <li>• 4 AI systems compete for best analysis</li>
+                <li>• Real-time legal precedent matching</li>
+                <li>• Evidence quality scoring</li>
+                <li>• Consensus-based recommendations</li>
+            </ul>
+        </div>
+        
+        <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 0.5rem;">
+            <h3>⚖️ Instant Verdicts</h3>
+            <ul style="margin-top: 1rem; line-height: 1.6;">
+                <li>• Human arbitrator review</li>
+                <li>• Blockchain-secured decisions</li>
+                <li>• Automatic payment processing</li>
+                <li>• Enforceable legal awards</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 2rem; padding: 2rem; background: rgba(0,255,0,0.1); border-radius: 1rem;">
+        <h3>🎯 Launch Status: Beta Testing Phase</h3>
+        <p style="margin: 1rem 0;">Platform currently in final testing with licensed arbitrators</p>
+        <div style="margin-top: 1.5rem;">
+            <button onclick="alert('Thanks for your interest! We\'ll notify you when SwiftVerdict launches. Email: beta@swiftverdict.xyz')" 
+                    style="background: #10b981; color: white; padding: 0.75rem 2rem; border: none; border-radius: 0.5rem; cursor: pointer; margin: 0.5rem; font-weight: bold;">
+                Join Beta List
             </button>
+            <button onclick="document.getElementById('demo-section').style.display='none'" 
+                    style="background: #6b7280; color: white; padding: 0.75rem 2rem; border: none; border-radius: 0.5rem; cursor: pointer; margin: 0.5rem;">
+                Close Preview
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function showDemo() {
+    document.getElementById('demo-section').style.display = 'block';
+    document.getElementById('demo-section').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
             
             <p style="margin-top: 2rem; opacity: 0.8;">
                 🚀 Join thousands who've resolved disputes faster and cheaper
