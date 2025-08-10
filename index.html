@@ -613,4 +613,192 @@
             progressFill.style.width = `${percentage}%`;
 
             // Update step indicators
-            for (let i = 1; i <= 4;
+            for (let i = 1; i <= 4; i++) {
+                const stepElement = document.getElementById(`step${i}`);
+                if (i < currentStep) {
+                    stepElement.className = 'step-circle step-complete';
+                } else if (i === currentStep) {
+                    stepElement.className = 'step-circle step-active';
+                } else {
+                    stepElement.className = 'step-circle step-inactive';
+                }
+            }
+        }
+
+        function nextStep(step) {
+            // Hide current step
+            document.getElementById(`step${currentStep}Content`).style.display = 'none';
+            
+            // Update current step
+            currentStep = step;
+            
+            // Show new step
+            document.getElementById(`step${currentStep}Content`).style.display = 'block';
+            
+            // Update progress bar
+            updateProgress();
+            
+            // Handle step-specific logic
+            if (step === 2) {
+                startAIAnalysis();
+            } else if (step === 3) {
+                startVirtualHearing();
+            } else if (step === 4) {
+                showVerdict();
+            }
+            
+            // Scroll to top of new step
+            document.getElementById(`step${currentStep}Content`).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function startAIAnalysis() {
+            const aiSystems = [
+                { id: 'claude', confidence: 87, analysis: 'Strong contract evidence', recommendation: 'Favor Plaintiff ($2,950)' },
+                { id: 'gpt', confidence: 82, analysis: 'Clear breach of terms', recommendation: 'Favor Plaintiff ($3,100)' },
+                { id: 'gemini', confidence: 85, analysis: 'Damages justified', recommendation: 'Favor Plaintiff ($2,800)' },
+                { id: 'deepseek', confidence: 91, analysis: 'Some work completed', recommendation: 'Partial Award ($2,750)' }
+            ];
+
+            let analysisIndex = 0;
+            
+            function analyzeNext() {
+                if (analysisIndex < aiSystems.length) {
+                    const ai = aiSystems[analysisIndex];
+                    
+                    // Update confidence bar
+                    setTimeout(() => {
+                        document.getElementById(`${ai.id}-confidence`).style.width = `${ai.confidence}%`;
+                        document.getElementById(`${ai.id}-analysis`).textContent = ai.analysis;
+                        document.getElementById(`${ai.id}-recommendation`).textContent = ai.recommendation;
+                    }, analysisIndex * 800);
+                    
+                    analysisIndex++;
+                    setTimeout(analyzeNext, 1000);
+                } else {
+                    // All analysis complete
+                    setTimeout(() => {
+                        document.getElementById('analysisStatus').innerHTML = '✅ AI Analysis Complete - Consensus Reached';
+                        document.getElementById('proceedToHearing').style.display = 'inline-flex';
+                        aiAnalysisComplete = true;
+                    }, 1000);
+                }
+            }
+            
+            analyzeNext();
+        }
+
+        function startVirtualHearing() {
+            const transcripts = [
+                "Arbitrator: Good morning everyone. We'll now review the case of TechStart Inc. vs DevCorp Solutions...",
+                "Plaintiff: Your honor, the contract clearly specified delivery of a fully functional e-commerce platform by March 15th...",
+                "Defendant: We completed 85% of the work and encountered scope creep beyond the original agreement...",
+                "Plaintiff: The missing payment processing and inventory management were core requirements from day one...",
+                "Defendant: We offered to complete the work with a 2-week extension, but plaintiff terminated the contract...",
+                "Arbitrator: I've reviewed the AI analysis and evidence. The contract terms are clear and unambiguous..."
+            ];
+
+            let transcriptIndex = 0;
+            const transcriptionDiv = document.getElementById('transcription');
+            
+            function addTranscript() {
+                if (transcriptIndex < transcripts.length) {
+                    const p = document.createElement('p');
+                    p.innerHTML = `<strong>${transcripts[transcriptIndex].split(':')[0]}:</strong>${transcripts[transcriptIndex].split(':')[1]}`;
+                    transcriptionDiv.appendChild(p);
+                    transcriptionDiv.scrollTop = transcriptionDiv.scrollHeight;
+                    
+                    transcriptIndex++;
+                    setTimeout(addTranscript, 2000);
+                } else {
+                    // Hearing complete
+                    setTimeout(() => {
+                        const finalP = document.createElement('p');
+                        finalP.innerHTML = '<strong>Arbitrator:</strong> Based on all evidence presented, I will now render my decision...';
+                        transcriptionDiv.appendChild(finalP);
+                        transcriptionDiv.scrollTop = transcriptionDiv.scrollHeight;
+                        
+                        document.getElementById('proceedToVerdict').style.display = 'inline-flex';
+                        hearingComplete = true;
+                    }, 1000);
+                }
+            }
+            
+            setTimeout(addTranscript, 1000);
+        }
+
+        function showVerdict() {
+            // Animate the verdict reveal
+            const verdictCard = document.querySelector('.verdict-card');
+            verdictCard.style.opacity = '0';
+            verdictCard.style.transform = 'scale(0.8)';
+            
+            setTimeout(() => {
+                verdictCard.style.transition = 'all 0.5s ease';
+                verdictCard.style.opacity = '1';
+                verdictCard.style.transform = 'scale(1)';
+            }, 500);
+        }
+
+        function resetDemo() {
+            // Reset all variables
+            currentStep = 1;
+            aiAnalysisComplete = false;
+            hearingComplete = false;
+            
+            // Hide all steps except first
+            for (let i = 2; i <= 4; i++) {
+                document.getElementById(`step${i}Content`).style.display = 'none';
+            }
+            document.getElementById('step1Content').style.display = 'block';
+            
+            // Reset progress
+            updateProgress();
+            
+            // Reset AI analysis
+            document.getElementById('analysisStatus').innerHTML = 'Analyzing evidence and legal precedents...';
+            document.getElementById('analysisStatus').className = 'typing-animation';
+            document.getElementById('proceedToHearing').style.display = 'none';
+            
+            // Reset confidence bars and text
+            const aiSystems = ['claude', 'gpt', 'gemini', 'deepseek'];
+            aiSystems.forEach(ai => {
+                document.getElementById(`${ai}-confidence`).style.width = '0%';
+                document.getElementById(`${ai}-analysis`).textContent = 'Analyzing...';
+                document.getElementById(`${ai}-recommendation`).textContent = '-';
+            });
+            
+            // Reset hearing
+            document.getElementById('transcription').innerHTML = `
+                <p><strong>Arbitrator:</strong> Good morning everyone. We'll now review the case of TechStart Inc. vs DevCorp Solutions...</p>
+                <p><strong>Plaintiff:</strong> Your honor, the contract clearly specified delivery of a fully functional e-commerce platform...</p>
+                <p><strong>Defendant:</strong> We completed 85% of the work and encountered scope creep beyond the original agreement...</p>
+                <p id="liveTranscript" class="typing-animation"><strong>Arbitrator:</strong> I've reviewed the AI analysis and evidence. Let me render my decision...</p>
+            `;
+            document.getElementById('proceedToVerdict').style.display = 'none';
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showSignup() {
+            const modal = document.getElementById('signupModal');
+            modal.style.display = 'flex';
+        }
+
+        function closeSignup() {
+            const modal = document.getElementById('signupModal');
+            modal.style.display = 'none';
+        }
+
+        function submitBeta() {
+            alert('Thanks for your interest! We\'ll notify you when SwiftVerdict launches.\nEmail: beta@swiftverdict.xyz');
+            closeSignup();
+        }
+
+        // Initialize progress on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+        });
+    </script>
+</body>
+</html>
