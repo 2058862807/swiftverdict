@@ -3,305 +3,614 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SwiftVerdict - AI-Powered Dispute Resolution</title>
+    <title>SwiftVerdict - Interactive Live Demo</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-        .container { min-height: 100vh; background: linear-gradient(135deg, #1e3a8a, #7c3aed, #1e40af); color: white; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .content { text-align: center; max-width: 1200px; }
-        h1 { font-size: 4rem; font-weight: bold; margin-bottom: 1rem; }
-        .subtitle { font-size: 1.5rem; margin-bottom: 3rem; opacity: 0.9; }
-        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
-        .feature { background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.2); }
-        .feature h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
-        .cta-button { background: linear-gradient(45deg, #10b981, #3b82f6); color: white; padding: 1rem 3rem; font-size: 1.2rem; border: none; border-radius: 1rem; cursor: pointer; font-weight: bold; transition: transform 0.3s; }
-        .cta-button:hover { transform: scale(1.05); }
-        .fee-structure { background: rgba(255,204,0,0.2); border: 2px solid rgba(255,204,0,0.3); border-radius: 1rem; padding: 2rem; margin: 2rem 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-        .fee-box { background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 0.5rem; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: linear-gradient(135deg, #0f172a, #1e293b, #334155);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .demo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .demo-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            background: rgba(255,255,255,0.05);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .demo-header h1 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6, #06b6d4);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .step-inactive { background: rgba(100,100,100,0.3); color: #666; }
+        .step-active { background: linear-gradient(45deg, #3b82f6, #8b5cf6); color: white; box-shadow: 0 0 20px rgba(59,130,246,0.5); }
+        .step-complete { background: linear-gradient(45deg, #10b981, #22c55e); color: white; }
+
+        .progress-line {
+            position: absolute;
+            top: 25px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(100,100,100,0.3);
+            z-index: 1;
+        }
+
+        .progress-line-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: width 0.5s ease;
+        }
+
+        .demo-step {
+            background: rgba(255,255,255,0.05);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 0.5rem;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .ai-analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .ai-card {
+            background: rgba(255,255,255,0.08);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .ai-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 2s infinite;
+            border-radius: 0.75rem;
+            z-index: -1;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .ai-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .confidence-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #22c55e);
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #10b981, #22c55e);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(100,116,139,0.8);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .verdict-card {
+            background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(59,130,246,0.1));
+            border: 2px solid rgba(16,185,129,0.3);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .verdict-amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #10b981;
+            margin: 1rem 0;
+        }
+
+        .evidence-upload {
+            border: 2px dashed rgba(255,255,255,0.3);
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .evidence-upload:hover {
+            border-color: #3b82f6;
+            background: rgba(59,130,246,0.05);
+        }
+
+        .typing-animation {
+            display: inline-block;
+            animation: typing 1.5s infinite;
+        }
+
+        @keyframes typing {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .blockchain-hash {
+            font-family: 'Courier New', monospace;
+            background: rgba(255,255,255,0.05);
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.9rem;
+            word-break: break-all;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: rgba(16,185,129,0.2);
+            color: #10b981;
+            border: 1px solid rgba(16,185,129,0.3);
+        }
+
+        .status-processing {
+            background: rgba(251,191,36,0.2);
+            color: #f59e0b;
+            border: 1px solid rgba(251,191,36,0.3);
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .demo-header h1 { font-size: 2rem; }
+            .progress-bar { flex-wrap: wrap; gap: 1rem; }
+            .ai-analysis-grid { grid-template-columns: 1fr; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="content">
-            <h1>SwiftVerdict</h1>
-            <p class="subtitle">Revolutionary AI-Powered Dispute Resolution</p>
-            
-            <div class="features">
-                <div class="feature">
-                    <h3>⏱️ 1-Hour Sessions</h3>
-                    <p>Complete resolution in 60 minutes vs 2-3 months in traditional courts</p>
-                </div>
-                <div class="feature">
-                    <h3>💰 $75 Base Fee</h3>
-                    <p>Transparent pricing for disputes up to $5,000 - compliant with all state laws</p>
-                </div>
-                <div class="feature">
-                    <h3>🛡️ Legally Binding</h3>
-                    <p>Federal Arbitration Act protection with blockchain verification</p>
-                </div>
-                <div class="feature">
-                    <h3>🧠 AI-Powered</h3>
-                    <p>Competitive AI orchestration for optimal outcomes</p>
-                </div>
-            </div>
-            
-            <div class="fee-structure">
-                <div class="fee-box">
-                    <h4>For Defendants:</h4>
-                    <ul style="text-align: left; margin-top: 1rem;">
-                        <li>• $0 upfront cost</li>
-                        <li>• Get PAID $75 if you win</li>
-                        <li>• Free AI legal defense</li>
-                        <li>• Only pay if you lose</li>
-                    </ul>
-                </div>
-                <div class="fee-box">
-                    <h4>For Plaintiffs:</h4>
-                    <ul style="text-align: left; margin-top: 1rem;">
-                        <li>• Pay $75 to file case</li>
-                        <li>• Get fee back if you win</li>
-                        <li>• Pay defendant's $75 if you lose</li>
-                        <li>• Ensures legitimate claims only</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <button class="cta-button" onclick="showDemo()">
-    File Your Case Now
-</button>
-
-<div id="demo-section" style="display: none; margin-top: 3rem; background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 1rem; text-align: left;">
-    <h2 style="text-align: center; margin-bottom: 2rem;">🚀 Platform Preview</h2>
-    
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-        <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 0.5rem;">
-            <h3>📋 Case Filing System</h3>
-            <ul style="margin-top: 1rem; line-height: 1.6;">
-                <li>• Smart case categorization</li>
-                <li>• Evidence upload with blockchain verification</li>
-                <li>• Automatic jurisdiction detection</li>
-                <li>• Real-time fee calculation</li>
-            </ul>
-        </div>
-        
-        <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 0.5rem;">
-            <h3>🎥 Virtual Hearing Room</h3>
-            <ul style="margin-top: 1rem; line-height: 1.6;">
-                <li>• HD video conferencing</li>
-                <li>• Live AI analysis display</li>
-                <li>• Real-time transcription</li>
-                <li>• Evidence presentation tools</li>
-            </ul>
-        </div>
-        
-        <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 0.5rem;">
-            <h3>🧠 Competitive AI Engine</h3>
-            <ul style="margin-top: 1rem; line-height: 1.6;">
-                <li>• 4 AI systems compete for best analysis</li>
-                <li>• Real-time legal precedent matching</li>
-                <li>• Evidence quality scoring</li>
-                <li>• Consensus-based recommendations</li>
-            </ul>
-        </div>
-        
-        <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 0.5rem;">
-            <h3>⚖️ Instant Verdicts</h3>
-            <ul style="margin-top: 1rem; line-height: 1.6;">
-                <li>• Human arbitrator review</li>
-                <li>• Blockchain-secured decisions</li>
-                <li>• Automatic payment processing</li>
-                <li>• Enforceable legal awards</li>
-            </ul>
-        </div>
-    </div>
-    
-    <div style="text-align: center; margin-top: 2rem; padding: 2rem; background: rgba(0,255,0,0.1); border-radius: 1rem;">
-        <h3>🎯 Launch Status: Beta Testing Phase</h3>
-        <p style="margin: 1rem 0;">Platform currently in final testing with licensed arbitrators</p>
-        <div style="margin-top: 1.5rem;">
-            <button onclick="alert('Thanks for your interest! We\'ll notify you when SwiftVerdict launches. Email: beta@swiftverdict.xyz')" 
-                    style="background: #10b981; color: white; padding: 0.75rem 2rem; border: none; border-radius: 0.5rem; cursor: pointer; margin: 0.5rem; font-weight: bold;">
-                Join Beta List
-            </button>
-            <button onclick="document.getElementById('demo-section').style.display='none'" 
-                    style="background: #6b7280; color: white; padding: 0.75rem 2rem; border: none; border-radius: 0.5rem; cursor: pointer; margin: 0.5rem;">
-                Close Preview
-            </button>
-        </div>
-    </div>
-</div>
-
-<script>
-function showDemo() {
-    document.getElementById('demo-section').style.display = 'block';
-    document.getElementById('demo-section').scrollIntoView({ behavior: 'smooth' });
-}
-</script>
-            
-            <p style="margin-top: 2rem; opacity: 0.8;">
-                🚀 Join thousands who've resolved disputes faster and cheaper
-            </p>
-        </div>
-    </div>
-<div<div id="demo-section" style="display: none; margin-top: 3rem; background: rgba(255,255,255,0.95); color: #1a1a1a; padding: 2rem; border-radius: 1rem; border: 3px solid #10b981;">
-    <div id="demo-step-1">
-        <h2 style="text-align: center; margin-bottom: 2rem; color: #1a1a1a;">🎬 SwiftVerdict Live Demo</h2>
-        
-        <div style="background: #f0f9ff; padding: 2rem; border-radius: 1rem; margin-bottom: 2rem; border: 2px solid #3b82f6;">
-            <h3 style="color: #1e40af; margin-bottom: 1rem;">Mock Case: TechStart Inc. vs DevCorp Solutions</h3>
-            <p style="margin: 0.5rem 0;"><strong>Dispute Amount:</strong> $3,500</p>
-            <p style="margin: 0.5rem 0;"><strong>Issue:</strong> Website development contract breach</p>
-            <p style="margin: 0.5rem 0;"><strong>Claim:</strong> Incomplete work, missed deadline</p>
-            <p style="margin: 0.5rem 0;"><strong>Evidence:</strong> Contract, email chain, partial deliverables</p>
-        </div>
-        
-        <div style="text-align: center;">
-            <button onclick="showStep(2)" style="background: #10b981; color: white; padding: 1rem 3rem; border: none; border-radius: 1rem; cursor: pointer; font-size: 1.2rem; font-weight: bold; margin: 0.5rem;">
-                ▶️ Start Case Filing
-            </button>
-            <button onclick="closeDemo()" style="background: #6b7280; color: white; padding: 1rem 2rem; border: none; border-radius: 1rem; cursor: pointer; font-size: 1rem; margin: 0.5rem;">
-                Close Demo
-            </button>
-        </div>
-    </div>
-
-    <div id="demo-step-2" style="display: none;">
-        <h2 style="color: #1a1a1a; margin-bottom: 2rem;">📋 Case Filing Interface</h2>
-        
-        <div style="background: #f8fafc; padding: 2rem; border-radius: 1rem; border: 2px solid #e2e8f0; margin-bottom: 2rem;">
-            <div style="margin-bottom: 1rem;">
-                <label style="display: block; margin-bottom: 0.5rem; font-weight: bold; color: #374151;">Case Title:</label>
-                <div style="background: white; padding: 0.75rem; border: 2px solid #d1d5db; border-radius: 0.5rem; color: #111827;">
-                    TechStart Inc. vs DevCorp Solutions
-                </div>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                <div>
-                    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold; color: #374151;">Amount:</label>
-                    <div style="background: white; padding: 0.75rem; border: 2px solid #d1d5db; border-radius: 0.5rem; color: #111827;">
-                        $3,500
-                    </div>
-                </div>
-                <div>
-                    <label style="display: block; margin-bottom: 0.5rem; font-weight: bold; color: #374151;">Priority:</label>
-                    <div style="background: white; padding: 0.75rem; border: 2px solid #d1d5db; border-radius: 0.5rem; color: #111827;">
-                        Standard (7-14 days)
-                    </div>
-                </div>
-            </div>
-            
-            <div style="margin-bottom: 1rem;">
-                <label style="display: block; margin-bottom: 0.5rem; font-weight: bold; color: #374151;">Case Description:</label>
-                <div style="background: white; padding: 0.75rem; border: 2px solid #d1d5db; border-radius: 0.5rem; color: #111827; min-height: 80px;">
-                    DevCorp Solutions failed to deliver the agreed-upon e-commerce website by the contracted deadline. Multiple core features are missing and the design doesn't match approved mockups.
-                </div>
-            </div>
-            
-            <div style="background: #ecfdf5; padding: 1rem; border-radius: 0.5rem; border: 2px solid #10b981;">
-                <p style="color: #065f46; font-weight: bold;">✅ Evidence uploaded and verified</p>
-                <p style="color: #065f46; font-size: 0.9rem;">3 documents blockchain-notarized</p>
-            </div>
-        </div> .style.display='none'" 
-                style="background: #6b7280; color: white; padding: 0.75rem 2rem; border: none; border-radius: 0.5rem; cursor: pointer;">
-            Close Preview
-        </button>
-    </div>
-</div>
-
-<div id="demo-section" style="display: none; margin-top: 3rem; background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 1rem;">
-    <div id="demo-step-1" style="display: block;">
-        <h2 style="text-align: center; margin-bottom: 2rem;">🎬 Live Demo: Mock Case</h2>
-        <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 1rem; margin-bottom: 2rem;">
-            <h3>Case: TechStart Inc. vs DevCorp Solutions</h3>
-            <p><strong>Dispute:</strong> $3,500 web development contract breach</p>
-            <p><strong>Claim:</strong> Website not delivered as specified</p>
-            <p><strong>Evidence:</strong> Contract, emails, partial work product</p>
-        </div>
-        <div style="text-align: center;">
-            <button onclick="startDemo()" style="background: #10b981; color: white; padding: 1rem 2rem; border: none; border-radius: 0.5rem; cursor: pointer; font-size: 1.1rem; font-weight: bold;">
-                ▶️ Start Case Filing
-            </button>
-        </div>
-    </div>
-
-    <div id="demo-step-2" style="display: none;">
-        <h2>📋 Case Filing System</h2>
-        <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 1rem; margin: 1rem 0;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-                <div>
-                    <label style="display: block; margin-bottom: 0.5rem;">Case Title:</label>
-                    <input value="TechStart Inc. vs DevCorp Solutions" style="width: 100%; padding: 0.5rem; border-radius: 0.25rem; border: none;" readonly>
-                </div>
-                <div>
-                    <label style="display: block; margin-bottom: 0.5rem;">Amount:</label>
-                    <input value="$3,500" style="width: 100%; padding: 0.5rem; border-radius: 0.25rem; border: none;" readonly>
-                </div>
-            </div>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>SwiftVerdict Live Demo</h1>
+            <p style="font-size: 1.2rem; opacity: 0.9;">Experience AI-powered dispute resolution in action</p>
             <div style="margin-top: 1rem;">
-                <label style="display: block; margin-bottom: 0.5rem;">Description:</label>
-                <textarea style="width: 100%; padding: 0.5rem; border-radius: 0.25rem; border: none; height: 60px;" readonly>DevCorp failed to deliver working website by agreed deadline. Multiple design issues and missing functionality.</textarea>
+                <span class="status-indicator status-processing">
+                    <span class="pulse">●</span>
+                    Demo Mode Active
+                </span>
             </div>
         </div>
-        <div style="text-align: center;">
-            <button onclick="nextStep(3)" style="background: #3b82f6; color: white; padding: 1rem 2rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: bold;">
-                Continue to AI Analysis ⚡
-            </button>
+
+        <div class="progress-bar">
+            <div class="progress-line">
+                <div class="progress-line-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="progress-step">
+                <div class="step-circle step-active" id="step1">1</div>
+                <span>File Case</span>
+            </div>
+            <div class="progress-step">
+                <div class="step-circle step-inactive" id="step2">2</div>
+                <span>AI Analysis</span>
+            </div>
+            <div class="progress-step">
+                <div class="step-circle step-inactive" id="step3">3</div>
+                <span>Virtual Hearing</span>
+            </div>
+            <div class="progress-step">
+                <div class="step-circle step-inactive" id="step4">4</div>
+                <span>Verdict</span>
+            </div>
+        </div>
+
+        <!-- Step 1: Case Filing -->
+        <div id="step1Content" class="demo-step">
+            <h2 style="margin-bottom: 1.5rem; color: #3b82f6;">📋 Case Filing System</h2>
+            
+            <div style="background: rgba(59,130,246,0.1); padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 2rem; border: 1px solid rgba(59,130,246,0.2);">
+                <h3 style="color: #3b82f6;">Demo Case: TechStart Inc. vs DevCorp Solutions</h3>
+                <p style="margin: 0.5rem 0; opacity: 0.9;">Contract dispute over website development project</p>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Plaintiff Company</label>
+                    <input type="text" class="form-input" value="TechStart Inc." readonly>
+                </div>
+                <div class="form-group">
+                    <label>Defendant Company</label>
+                    <input type="text" class="form-input" value="DevCorp Solutions" readonly>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Dispute Amount</label>
+                    <input type="text" class="form-input" value="$3,500" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Case Priority</label>
+                    <select class="form-select" disabled>
+                        <option>Standard (7-14 days)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Case Description</label>
+                <textarea class="form-textarea" readonly>DevCorp Solutions failed to deliver the agreed-upon e-commerce website by the contracted deadline. Multiple core features are missing including payment processing, inventory management, and responsive mobile design. The delivered work does not match the approved mockups and contains several critical bugs.</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Evidence Upload</label>
+                <div class="evidence-upload">
+                    <div style="margin-bottom: 1rem;">
+                        <span class="status-indicator status-success">✅ Contract Agreement.pdf</span>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <span class="status-indicator status-success">✅ Email Chain (15 messages).pdf</span>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <span class="status-indicator status-success">✅ Design Mockups & Deliverables.zip</span>
+                    </div>
+                    <p style="font-size: 0.9rem; opacity: 0.7; margin-top: 1rem;">All evidence blockchain-verified and encrypted</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="nextStep(2)">
+                    Submit Case & Start AI Analysis →
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 2: AI Analysis -->
+        <div id="step2Content" class="demo-step" style="display: none;">
+            <h2 style="margin-bottom: 1.5rem; color: #8b5cf6;">🧠 Competitive AI Analysis</h2>
+            
+            <div style="background: rgba(139,92,246,0.1); padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 2rem; border: 1px solid rgba(139,92,246,0.2);">
+                <h3 style="color: #8b5cf6;">Four AI Systems Competing for Best Analysis</h3>
+                <p style="opacity: 0.9;">Each AI independently evaluates evidence and legal precedents</p>
+                <p id="analysisStatus" class="typing-animation" style="color: #f59e0b; margin-top: 1rem;">Analyzing evidence and legal precedents...</p>
+            </div>
+
+            <div class="ai-analysis-grid" id="aiGrid">
+                <div class="ai-card">
+                    <div class="ai-name" style="color: #ff6b35;">Claude 4</div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="claude-confidence" style="width: 0%"></div>
+                    </div>
+                    <div id="claude-analysis" style="font-size: 0.9rem; opacity: 0.8;">Analyzing...</div>
+                    <div id="claude-recommendation" style="font-weight: bold; margin-top: 1rem; color: #10b981;">-</div>
+                </div>
+
+                <div class="ai-card">
+                    <div class="ai-name" style="color: #00d4aa;">GPT-4</div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="gpt-confidence" style="width: 0%"></div>
+                    </div>
+                    <div id="gpt-analysis" style="font-size: 0.9rem; opacity: 0.8;">Analyzing...</div>
+                    <div id="gpt-recommendation" style="font-weight: bold; margin-top: 1rem; color: #10b981;">-</div>
+                </div>
+
+                <div class="ai-card">
+                    <div class="ai-name" style="color: #4285f4;">Gemini</div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="gemini-confidence" style="width: 0%"></div>
+                    </div>
+                    <div id="gemini-analysis" style="font-size: 0.9rem; opacity: 0.8;">Analyzing...</div>
+                    <div id="gemini-recommendation" style="font-weight: bold; margin-top: 1rem; color: #10b981;">-</div>
+                </div>
+
+                <div class="ai-card">
+                    <div class="ai-name" style="color: #ff4785;">DeepSeek</div>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" id="deepseek-confidence" style="width: 0%"></div>
+                    </div>
+                    <div id="deepseek-analysis" style="font-size: 0.9rem; opacity: 0.8;">Analyzing...</div>
+                    <div id="deepseek-recommendation" style="font-weight: bold; margin-top: 1rem; color: #10b981;">-</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" id="proceedToHearing" onclick="nextStep(3)" style="display: none;">
+                    Proceed to Virtual Hearing →
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 3: Virtual Hearing -->
+        <div id="step3Content" class="demo-step" style="display: none;">
+            <h2 style="margin-bottom: 1.5rem; color: #06b6d4;">🎥 Virtual Hearing Room</h2>
+            
+            <div style="background: rgba(6,182,212,0.1); padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 2rem; border: 1px solid rgba(6,182,212,0.2);">
+                <h3 style="color: #06b6d4;">Live Arbitration Session</h3>
+                <p style="opacity: 0.9;">Licensed arbitrator reviewing AI recommendations and evidence</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 0.5rem;">
+                    <h4 style="margin-bottom: 1rem;">📹 Plaintiff (TechStart Inc.)</h4>
+                    <div style="background: rgba(59,130,246,0.2); height: 150px; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                        <span style="color: #3b82f6; font-size: 3rem;">👨‍💼</span>
+                    </div>
+                    <div class="status-indicator status-success">Connected - Audio/Video Active</div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 0.5rem;">
+                    <h4 style="margin-bottom: 1rem;">📹 Defendant (DevCorp Solutions)</h4>
+                    <div style="background: rgba(239,68,68,0.2); height: 150px; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                        <span style="color: #ef4444; font-size: 3rem;">👩‍💻</span>
+                    </div>
+                    <div class="status-indicator status-success">Connected - Audio/Video Active</div>
+                </div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 2rem;">
+                <h4 style="margin-bottom: 1rem;">⚖️ Arbitrator Panel</h4>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="background: rgba(34,197,94,0.2); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <span style="color: #22c55e; font-size: 2rem;">👨‍⚖️</span>
+                    </div>
+                    <div>
+                        <h5>Judge William Morrison</h5>
+                        <p style="opacity: 0.8; font-size: 0.9rem;">Licensed Arbitrator, 15+ years experience</p>
+                        <p style="opacity: 0.8; font-size: 0.9rem;">Specialization: Contract & Commercial Disputes</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 2rem;">
+                <h4 style="margin-bottom: 1rem;">📝 Live Transcription</h4>
+                <div id="transcription" style="height: 120px; overflow-y: auto; font-family: monospace; font-size: 0.9rem; line-height: 1.4;">
+                    <p><strong>Arbitrator:</strong> Good morning everyone. We'll now review the case of TechStart Inc. vs DevCorp Solutions...</p>
+                    <p><strong>Plaintiff:</strong> Your honor, the contract clearly specified delivery of a fully functional e-commerce platform...</p>
+                    <p><strong>Defendant:</strong> We completed 85% of the work and encountered scope creep beyond the original agreement...</p>
+                    <p id="liveTranscript" class="typing-animation"><strong>Arbitrator:</strong> I've reviewed the AI analysis and evidence. Let me render my decision...</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-success" id="proceedToVerdict" onclick="nextStep(4)" style="display: none;">
+                    Generate Final Verdict →
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 4: Verdict -->
+        <div id="step4Content" class="demo-step" style="display: none;">
+            <h2 style="margin-bottom: 1.5rem; color: #10b981;">⚖️ SwiftVerdict Decision</h2>
+
+            <div class="verdict-card">
+                <h3 style="font-size: 2rem; margin-bottom: 1rem;">FINAL RULING</h3>
+                <h4 style="font-size: 1.5rem; color: #10b981; margin-bottom: 0.5rem;">In Favor of Plaintiff</h4>
+                <div class="verdict-amount">$2,950</div>
+                <p style="font-size: 1.1rem; margin-bottom: 1rem;">+ $75 filing fee reimbursement</p>
+                <p style="opacity: 0.9;">Total award: $3,025</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 2rem 0;">
+                <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 0.5rem;">
+                    <h4 style="margin-bottom: 1rem; color: #3b82f6;">📋 Legal Analysis</h4>
+                    <p style="line-height: 1.6; font-size: 0.95rem;">
+                        Valid contract established with clear deliverables and timeline. Defendant failed to meet agreed specifications and missed critical deadline. Evidence shows substantial work remaining. Partial credit given for completed components.
+                    </p>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 0.5rem;">
+                    <h4 style="margin-bottom: 1rem; color: #8b5cf6;">🤖 AI Consensus</h4>
+                    <p style="line-height: 1.6; font-size: 0.95rem;">
+                        All four AI systems agreed on liability. Average confidence: 86.25%. Recommendation range: $2,800-$3,200. Human arbitrator applied legal expertise for final amount.
+                    </p>
+                </div>
+            </div>
+
+            <div style="background: rgba(16,185,129,0.1); padding: 1.5rem; border-radius: 0.5rem; margin: 2rem 0; border: 1px solid rgba(16,185,129,0.2);">
+                <h4 style="color: #10b981; margin-bottom: 1rem;">🔐 Blockchain Verification</h4>
+                <p style="margin-bottom: 1rem;">Decision permanently recorded and legally enforceable:</p>
+                <div class="blockchain-hash">
+                    Hash: 0x4a7b9f2e8c1d5a3f7b2e9c4d8f1a6b3e5c7d9f2a8b4c6e1d3f5a9c2b7e4d8f6a1b3c5e7d9f2a4b6c8e1d3f5a7c9b2e4d6f8a1b3c5e7d9f2a4b6c8e0d2f4a6b8c1d3e5f7a9c2b4d6e8f1a3c5d7e9f2a4b6c8d1e3f5a7c9b2d4e6f8a0c2e4f6a8c1d3e5f7a9b2c4d6e8f0a2c4e6f8a1b3c5d7e9f2a4b6c8d0e2f4a6b8c1d3e5f7a9c2b4d6e8f1a3c5d7e9f2
+                </div>
+                <div style="margin-top: 1rem;">
+                    <span class="status-indicator status-success">✅ Decision Secured</span>
+                    <span class="status-indicator status-success">✅ Payment Processing</span>
+                    <span class="status-indicator status-success">✅ Legal Enforcement Ready</span>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="resetDemo()" style="margin-right: 1rem;">
+                    🔄 Run Demo Again
+                </button>
+                <button class="btn btn-success" onclick="showSignup()">
+                    Join Beta Waitlist →
+                </button>
+            </div>
+        </div>
+
+        <!-- Beta Signup Modal -->
+        <div id="signupModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+            <div style="background: linear-gradient(135deg, #1e293b, #334155); padding: 3rem; border-radius: 1rem; max-width: 500px; width: 90%; border: 1px solid rgba(255,255,255,0.1);">
+                <h3 style="text-align: center; margin-bottom: 2rem; color: #3b82f6;">Join SwiftVerdict Beta</h3>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" class="form-input" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Company/Organization</label>
+                    <input type="text" class="form-input" placeholder="Optional">
+                </div>
+                <div class="form-group">
+                    <label>Interest Level</label>
+                    <select class="form-select">
+                        <option>Personal Use</option>
+                        <option>Small Business</option>
+                        <option>Enterprise</option>
+                        <option>Legal Professional</option>
+                    </select>
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="btn btn-success" onclick="submitBeta()" style="margin-right: 1rem;">Submit</button>
+                    <button class="btn btn-secondary" onclick="closeSignup()">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div id="demo-step-3" style="display: none;">
-        <h2>🧠 Live AI Analysis</h2>
-        <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 1rem; margin: 1rem 0;">
-            <h3 style="margin-bottom: 1rem;">Competitive AI Systems Analyzing...</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                <div style="background: rgba(255,165,0,0.2); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgba(255,165,0,0.5);">
-                    <h4>Claude AI</h4>
-                    <p>Confidence: 87%</p>
-                    <p>Recommends: Plaintiff</p>
-                    <p style="font-size: 0.9rem;">Strong contract evidence</p>
-                </div>
-                <div style="background: rgba(34,197,94,0.2); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgba(34,197,94,0.5);">
-                    <h4>GPT-4</h4>
-                    <p>Confidence: 82%</p>
-                    <p>Recommends: Plaintiff</p>
-                    <p style="font-size: 0.9rem;">Clear breach of terms</p>
-                </div>
-                <div style="background: rgba(59,130,246,0.2); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgba(59,130,246,0.5);">
-                    <h4>DeepSeek</h4>
-                    <p>Confidence: 91%</p>
-                    <p>Recommends: Partial</p>
-                    <p style="font-size: 0.9rem;">Some work completed</p>
-                </div>
-                <div style="background: rgba(147,51,234,0.2); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgba(147,51,234,0.5);">
-                    <h4>Gemini</h4>
-                    <p>Confidence: 85%</p>
-                    <p>Recommends: Plaintiff</p>
-                    <p style="font-size: 0.9rem;">Damages justified</p>
-                </div>
-            </div>
-        </div>
-        <div style="text-align: center;">
-            <button onclick="nextStep(4)" style="background: #8b5cf6; color: white; padding: 1rem 2rem; border: none; border-radius: 0.5rem; cursor: pointer; font-weight: bold;">
-                Generate Verdict ⚖️
-            </button>
-        </div>
-    </div>
+    <script>
+        let currentStep = 1;
+        let aiAnalysisComplete = false;
+        let hearingComplete = false;
 
-    <div id="demo-step-4" style="display: none;">
-        <h2>⚖️ SwiftVerdict Decision</h2>
-        <div style="background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(59,130,246,0.2)); padding: 2rem; border-radius: 1rem; margin: 1rem 0; border: 2px solid rgba(34,197,94,0.5);">
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <h3 style="font-size: 2rem; color: #10b981; margin-bottom: 1rem;">RULING</h3>
-                <h4 style="font-size: 1.5rem; margin-bottom: 0.5rem;">In Favor of Plaintiff</h4>
-                <p style="font-size: 1.2rem;">Award: $2,950 + $75 fee reimbursement</p>
-            </div>
-            <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 0.5rem; margin: 1rem 0;">
-                <h4>Legal Analysis:</h4>
-                <p>Valid contract established with clear deliverables. Defendant failed to meet agreed specifications and deadline. Partial credit given for work completed.</p>
-            </div>
-            <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 0.5rem;">
-                <h4>🔐 Blockchain Verification:</h4>
-                <p style="font-family: monospace; font-size: 0.9rem;">Hash: 0x4a7b9f2e8c1d...</p>
-                <p>✅ Decision permanently recorded and legally en</body>
-</html>
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const percentage = ((currentStep - 1) / 3) * 100;
+            progressFill.style.width = `${percentage}%`;
+
+            // Update step indicators
+            for (let i = 1; i <= 4;
